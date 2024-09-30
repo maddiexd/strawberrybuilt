@@ -10,7 +10,7 @@ jobs:
 
   build-opensuse:
     name: Build openSUSE
-    if: github.repository != 'strawberrymusicplayer/strawberry-private'
+    if: github.repository != 'maddiexd/strawberrybuilt'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -134,7 +134,7 @@ jobs:
 
   build-fedora:
     name: Build Fedora
-    if: github.repository != 'strawberrymusicplayer/strawberry-private'
+    if: github.repository != 'maddiexd/strawberrybuilt'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -225,7 +225,7 @@ jobs:
 
   build-openmandriva:
     name: Build OpenMandriva
-    if: github.repository != 'strawberrymusicplayer/strawberry-private' && false
+    if: github.repository != 'maddiexd/strawberrybuilt' && false
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -321,7 +321,7 @@ jobs:
 
   build-mageia:
     name: Build Mageia
-    if: github.repository != 'strawberrymusicplayer/strawberry-private'
+    if: github.repository != 'maddiexd/strawberrybuilt'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -417,7 +417,7 @@ jobs:
 
   build-debian:
     name: Build Debian
-    if: github.repository != 'strawberrymusicplayer/strawberry-private'
+    if: github.repository != 'maddiexd/strawberrybuilt'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -494,7 +494,7 @@ jobs:
 
   build-ubuntu:
     name: Build Ubuntu
-    if: github.repository != 'strawberrymusicplayer/strawberry-private'
+    if: github.repository != 'maddiexd/strawberrybuilt'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -576,7 +576,7 @@ jobs:
 
   upload-ubuntu-ppa:
     name: Upload Ubuntu PPA
-    if: github.repository == 'strawberrymusicplayer/strawberry' && github.event.pull_request.head.repo.fork == false && (github.event_name == 'release' || (github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/ci' || github.ref == 'refs/heads/1.1')))
+    if: github.repository == 'maddiexd/strawberrybuilt' && github.event.pull_request.head.repo.fork == false && (github.event_name == 'release' || (github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/ci' || github.ref == 'refs/heads/1.1')))
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -666,7 +666,7 @@ jobs:
 
   build-macos-public:
     name: Build macOS Public
-    if: github.repository != 'strawberrymusicplayer/strawberry-private'
+    if: github.repository != 'maddiexd/strawberrybuilt'
 
     strategy:
       fail-fast: false
@@ -716,14 +716,14 @@ jobs:
           submodules: recursive
 
       - name: Import certificate file
-        if: github.repository == 'strawberrymusicplayer/strawberry' && github.event.pull_request.head.repo.fork == false
+        if: github.repository == 'maddiexd/strawberrybuilt' && github.event.pull_request.head.repo.fork == false
         uses: apple-actions/import-codesign-certs@v3
         with:
           p12-file-base64: ${{ secrets.APPLE_DEVELOPER_ID_CERTIFICATE }}
           p12-password: ${{ secrets.APPLE_DEVELOPER_ID_CERTIFICATE_PASSWORD }}
 
       - name: Download macOS dependencies
-        run: curl -f -O -L https://github.com/strawberrymusicplayer/strawberry-macos-dependencies/releases/latest/download/strawberry-macos-${{env.arch}}-${{env.buildtype}}.tar.xz
+        run: curl -f -O -L https://github.com/maddiexd/strawberrybuilt-macos-dependencies/releases/latest/download/strawberry-macos-${{env.arch}}-${{env.buildtype}}.tar.xz
 
       - name: Extract macOS dependencies
         run: sudo tar -C / -xf strawberry-macos-${{env.arch}}-${{env.buildtype}}.tar.xz
@@ -753,7 +753,7 @@ jobs:
           -DENABLE_DBUS=OFF
           -DICU_ROOT="${{env.prefix_path}}"
           -DFFTW3_DIR="${{env.prefix_path}}"
-          -DAPPLE_DEVELOPER_ID=$(test '${{github.repository}}' = 'strawberrymusicplayer/strawberry' && test '${{github.event.pull_request.base.repo.full_name}}' = '${{github.event.pull_request.head.repo.full_name}}' && echo "383J84DVB6" || echo "")
+          -DAPPLE_DEVELOPER_ID=$(test '${{github.repository}}' = 'maddiexd/strawberrybuilt' && test '${{github.event.pull_request.base.repo.full_name}}' = '${{github.event.pull_request.head.repo.full_name}}' && echo "383J84DVB6" || echo "")
           -DENABLE_SPOTIFY=$(test -f "${{env.prefix_path}}/lib/gstreamer-1.0/libgstspotify.dylib" && echo "ON" || echo "OFF")
 
       - name: Build
@@ -773,12 +773,12 @@ jobs:
         run: make deploy
 
       - name: Manually Codesign
-        if: github.repository == 'strawberrymusicplayer/strawberry' && github.event.pull_request.head.repo.fork == false && matrix.runner == 'macos-13'
+        if: github.repository == 'maddiexd/strawberrybuilt' && github.event.pull_request.head.repo.fork == false && matrix.runner == 'macos-13'
         working-directory: build
         run: codesign -s 383J84DVB6 -f strawberry.app/Contents/Frameworks/{libpcre2-8.0.dylib,libpcre2-16.0.dylib,libpng16.16.dylib,libfreetype.6.dylib,libzstd.1.dylib} strawberry.app/Contents/Frameworks/png.framework/png strawberry.app
 
       - name: Manually Codesign
-        if: github.repository == 'strawberrymusicplayer/strawberry' && github.event.pull_request.head.repo.fork == false && matrix.runner == 'macos-14'
+        if: github.repository == 'maddiexd/strawberrybuilt' && github.event.pull_request.head.repo.fork == false && matrix.runner == 'macos-14'
         working-directory: build
         run: codesign -s 383J84DVB6 -f strawberry.app/Contents/Frameworks/png.framework/png strawberry.app
 
@@ -787,7 +787,7 @@ jobs:
         run: make deploycheck
 
       - name: Verify code-signing
-        if: github.repository == 'strawberrymusicplayer/strawberry' && github.event.pull_request.head.repo.fork == false
+        if: github.repository == 'maddiexd/strawberrybuilt' && github.event.pull_request.head.repo.fork == false
         working-directory: build
         run: codesign --deep -v strawberry.app
 
@@ -796,7 +796,7 @@ jobs:
         run: make dmg
 
       - name: SSH Setup
-        if: github.repository == 'strawberrymusicplayer/strawberry' && (github.event_name == 'release' || (github.event_name == 'push' && github.event.pull_request.head.repo.fork == false && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/ci' || github.ref == 'refs/heads/macos')))
+        if: github.repository == 'maddiexd/strawberrybuilt' && (github.event_name == 'release' || (github.event_name == 'push' && github.event.pull_request.head.repo.fork == false && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/ci' || github.ref == 'refs/heads/macos')))
         uses: shimataro/ssh-key-action@v2
         with:
           known_hosts: ${{secrets.SSH_KNOWN_HOSTS}}
@@ -804,7 +804,7 @@ jobs:
 
       - name: Set Upload path
         id: set-upload-path
-        if: github.repository == 'strawberrymusicplayer/strawberry' && (github.event_name == 'release' || (github.event_name == 'push' && github.event.pull_request.head.repo.fork == false && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/ci' || github.ref == 'refs/heads/macos')))
+        if: github.repository == 'maddiexd/strawberrybuilt' && (github.event_name == 'release' || (github.event_name == 'push' && github.event.pull_request.head.repo.fork == false && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/ci' || github.ref == 'refs/heads/macos')))
         run: |
           if [ "${{github.event_name}}" = "release" ]; then
             echo "upload_path=${{secrets.DOWNLOADS_PATH}}/stable_releases/macos" >> $GITHUB_OUTPUT
@@ -823,7 +823,7 @@ jobs:
 
   build-macos-private:
     name: Build macOS Private
-    if: github.repository == 'strawberrymusicplayer/strawberry-private'
+    if: github.repository == 'maddiexd/strawberrybuilt'
 
     strategy:
       fail-fast: false
@@ -946,7 +946,7 @@ jobs:
 
   build-windows-mingw:
     name: Build Windows MinGW
-    if: github.repository != 'strawberrymusicplayer/strawberry-private'
+    if: github.repository != 'maddiexd/strawberrybuilt'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -1109,7 +1109,7 @@ jobs:
 
       - name: Set Upload path
         id: set-upload-path
-        if: github.repository == 'strawberrymusicplayer/strawberry' && (github.event_name == 'release' || (github.event_name == 'push' && github.event.pull_request.head.repo.fork == false && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/ci' || github.ref == 'refs/heads/windows')))
+        if: github.repository == 'maddiexd/strawberrybuilt' && (github.event_name == 'release' || (github.event_name == 'push' && github.event.pull_request.head.repo.fork == false && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/ci' || github.ref == 'refs/heads/windows')))
         run: |
           if [ "${{github.event_name}}" = "release" ]; then
             echo "upload_path=${{secrets.DOWNLOADS_PATH}}/stable_releases/windows/mingw" >> $GITHUB_OUTPUT
@@ -1135,7 +1135,7 @@ jobs:
 
   build-windows-msvc:
     name: Build Windows MSVC
-    if: github.repository != 'strawberrymusicplayer/strawberry-private'
+    if: github.repository != 'maddiexd/strawberrybuilt'
     runs-on: windows-2022
     strategy:
       fail-fast: false
@@ -1171,7 +1171,7 @@ jobs:
       - name: Download Windows MSVC dependencies
         shell: cmd
         working-directory: downloads
-        run: curl -f -O -L https://github.com/strawberrymusicplayer/strawberry-msvc-dependencies/releases/latest/download/strawberry-msvc-${{matrix.arch}}-${{matrix.buildtype}}.tar.xz
+        run: curl -f -O -L https://github.com/maddiexd/strawberrybuilt-msvc-dependencies/releases/latest/download/strawberry-msvc-${{matrix.arch}}-${{matrix.buildtype}}.tar.xz
 
       - name: Extract Windows MSVC dependencies
         shell: bash
@@ -1349,7 +1349,7 @@ jobs:
       - name: Download copydlldeps.sh
         shell: bash
         working-directory: build
-        run: curl -f -O -L https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-mxe/master/tools/copydlldeps.sh
+        run: curl -f -O -L https://raw.githubusercontent.com/maddiexd/strawberrybuilt-mxe/master/tools/copydlldeps.sh
 
       - name: Copy dependencies
         shell: bash
@@ -1421,7 +1421,7 @@ jobs:
       - name: Set Upload path
         id: set-upload-path
         shell: bash
-        if: github.repository == 'strawberrymusicplayer/strawberry' && (github.event_name == 'release' || (github.event_name == 'push' && github.event.pull_request.head.repo.fork == false && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/ci' || github.ref == 'refs/heads/windows')))
+        if: github.repository == 'maddiexd/strawberrybuilt' && (github.event_name == 'release' || (github.event_name == 'push' && github.event.pull_request.head.repo.fork == false && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/ci' || github.ref == 'refs/heads/windows')))
         run: |
           if [ "${{github.event_name}}" = "release" ]; then
             echo "upload_path=${{secrets.DOWNLOADS_PATH}}/stable_releases/windows/msvc" >> $GITHUB_OUTPUT
@@ -1450,7 +1450,7 @@ jobs:
 
   upload:
     name: Upload
-    if: (success() || failure()) && github.repository == 'strawberrymusicplayer/strawberry' && (github.event_name == 'release' || (github.event_name == 'push' && github.event.pull_request.head.repo.fork == false && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/ci')))
+    if: (success() || failure()) && github.repository == 'maddiexd/strawberrybuilt' && (github.event_name == 'release' || (github.event_name == 'push' && github.event.pull_request.head.repo.fork == false && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/ci')))
     runs-on: ubuntu-latest
     needs:
       - build-opensuse
